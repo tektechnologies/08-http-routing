@@ -29,6 +29,34 @@ describe('app', () => {
       .expect('Test Error');
   });
 
+  it('responds with message for POST /api/hello', () => {
+    return request(app)
+      .post('/api/hello')
+      .send({ name: 'Craig' })
+      .expect(200)
+      .expect('Content-Type', 'application/json')
+      .expect(response => {
+        expect(response.body).toBeDefined();
+        expect(response.body.message).toBe('Hello, Craig!');
+      });
+  });
+  describe('api routes', () => {
+    it('can get /api/notes', () => {
+      return request(app)
+        .get('/api/notes')
+        .expect(200)
+        .expect('Content-Type', 'application/json')
+        .expect([{ id: 1 }]);
+    });
+
+    it('can delete /api/notes?id=deleteme', () => {
+      return request(app)
+        .delete('/api/notes?id=deleteme')
+        .expect(200)
+        .expect('Content-Type', 'application/json')
+        .expect({ message: `ID deleteme was deleted` });
+    });
+  });
 
 
 });//closes describe app
