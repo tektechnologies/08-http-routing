@@ -29,32 +29,35 @@ describe('app', () => {
       .expect('Test Error');
   });
 
-  it('responds with message for POST /api/hello', () => {
+  it('responds with message for POST /api/cowsay', () => {
     return request(app)
-      .post('/api/hello')
-      .send({ name: 'Craig' })
+      .post('/api/cowsay')
+      .send({ text: 'Craig' })
       .expect(200)
       .expect('Content-Type', 'application/json')
       .expect(response => {
         expect(response.body).toBeDefined();
-        expect(response.body.message).toBe('Hello, Craig!');
+        expect(response.body.message).toMatch('Hello, Craig!');
       });
   });
   describe('api routes', () => {
-    it('can get /api/notes', () => {
+    it('can get /api/cowsay', () => {
       return request(app)
-        .get('/api/notes')
+        .get('/api/cowsay?text=hi')
         .expect(200)
         .expect('Content-Type', 'application/json')
-        .expect([{ id: 1 }]);
+        .expect(response => {
+          expect(response.body).toBeDefined();
+          expect(response.body.content).toMatch('hi');
+        });
     });
 
-    it('can delete /api/notes?id=deleteme', () => {
+    it('can delete /api/cowsay=deleteme', () => {
       return request(app)
-        .delete('/api/notes?id=deleteme')
+        .delete('/api/cowsay?id=1')
         .expect(200)
         .expect('Content-Type', 'application/json')
-        .expect({ message: `ID deleteme was deleted` });
+        .expect({ message: `Cow number 1 is deleted` });
     });
   });
 
